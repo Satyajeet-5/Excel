@@ -1,8 +1,7 @@
-
 name: FastAPI Docker CI with ngrok
 
 on:
-  workflow_dispatch:   # Manual trigger
+  workflow_dispatch:   # manual trigger
   push:
     branches:
       - main
@@ -10,32 +9,24 @@ on:
 jobs:
   docker-job:
     runs-on: ubuntu-latest
-
     steps:
-      # 1️⃣ Checkout code
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Check Docker
       - name: Check Docker
         run: docker --version
 
-      # 3️⃣ Build Docker image
       - name: Build Docker image
         run: docker build -t fastapi-docker .
 
-      # 4️⃣ Run FastAPI container in background
       - name: Run FastAPI container
         run: docker run -d --name fastapi-container -p 8000:8000 fastapi-docker
 
-      # 5️⃣ Install ngrok
       - name: Install ngrok
         run: sudo snap install ngrok
 
-      # 6️⃣ Start ngrok tunnel
       - name: Start ngrok
         run: ngrok http 8000
 
-      # 7️⃣ Optional: Test FastAPI endpoint via curl
       - name: Test FastAPI endpoint
         run: curl http://localhost:8000
